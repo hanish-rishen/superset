@@ -1,0 +1,3 @@
+[
+  {"id":"superset-frontend-v1","repository":"apache/superset","executor":"hanish-rishen/superset","directory":"superset-frontend","engine":"jest","dockerTarget":"superset-node-ci","fingerprints":{"Dockerfile":"a3b02332eb00123b4b5bb4f46ec70937411e13f3","superset-frontend/package.json":"7e68837efa2a961763f7e7a2b02602d8b793476f","superset-frontend/package-lock.json":"d1329ade2882bec9840a6972202948ee246eadc2"}}
+]

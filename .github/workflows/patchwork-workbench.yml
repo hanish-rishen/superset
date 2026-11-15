@@ -1,0 +1,12 @@
+{
+  "name":"Patchwork contribution workbench",
+  "on":{"push":{"branches":["patchwork/jobs-*"],"paths":[".patchwork/workbench/request.json"]}},
+  "permissions":{"contents":"read"},
+  "concurrency":{"group":"patchwork-workbench-executor","cancel-in-progress":false},
+  "jobs":{"run":{"if":"github.repository == 'hanish-rishen/superset'","runs-on":"ubuntu-26.04","timeout-minutes":45,"steps":[
+    {"name":"Checkout reviewed controller","uses":"actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803","with":{"path":"control","persist-credentials":false}},
+    {"name":"Read pinned source identity","id":"source","run":"python3 control/.patchwork/workbench/workbench_runner.py --request control/.patchwork/workbench/request.json --describe >> \"$GITHUB_OUTPUT\""},
+    {"name":"Checkout pinned public source","uses":"actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803","with":{"repository":"${{ steps.source.outputs.repository }}","ref":"${{ steps.source.outputs.base_sha }}","path":"source","persist-credentials":false}},
+    {"name":"Run protected reproduction and submitted edits","env":{"PYTHONUNBUFFERED":"1","PYTHONDONTWRITEBYTECODE":"1"},"run":"python3 control/.patchwork/workbench/workbench_runner.py --request control/.patchwork/workbench/request.json --source \"$GITHUB_WORKSPACE/source\" --output \"$RUNNER_TEMP/patchwork-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}\""}
+  ]}}
+}
