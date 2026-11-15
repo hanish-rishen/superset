@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "case_id": "superset-title",
+  "repository": "apache/superset",
+  "base_sha": "463c58cef1a48df974dcab710a868617b58dcb93",
+  "reference_sha": "b2d19688971c132ed63433f7f823e0c18562e341",
+  "docker_target": "superset-node-ci",
+  "workdir": "/app/superset-frontend",
+  "test_file": "src/dashboard/containers/DashboardPage.test.tsx",
+  "runtime_file": "src/dashboard/containers/DashboardPage.tsx",
+  "original_file": "original.tsx",
+  "oracle_file": "oracle.test.tsx",
+  "reference_file": "reference.tsx",
+  "hashes": {
+    "original_file": "385fb3174613faaed241f9683cf0a2adaff50fd47a822dfc31e836f2ff66808a",
+    "oracle_file": "4f62165169161c8942431ba655c66f4388907dcb5319fb2d933157e456dbad89",
+    "reference_file": "e3e77bdbf2e5a25140b12b387902072611e5bd87401d9d57f2bfb2baa19a78b3"
+  },
+  "regression_name": "document.title falls back to the app name on unmount, not the title present at mount",
+  "expected": {
+    "failure_fragments": [
+      "Expected: \"Superset\"",
+      "Received: \"Test Dashboard\""
+    ]
+  },
+  "limits": {
+    "build_seconds": 1500,
+    "test_seconds": 300,
+    "memory_gib": 10,
+    "cpus": 3,
+    "pids": 256
+  },
+  "scope": "component_regression"
+}

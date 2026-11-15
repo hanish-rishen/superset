@@ -1,0 +1,58 @@
+{
+  "name": "Patchwork isolated component proof",
+  "on": {
+    "push": {
+      "branches": [
+        "patchwork/runner-proof-*"
+      ],
+      "paths": [
+        ".github/workflows/patchwork-remote-proof.yml",
+        ".patchwork/remote/**"
+      ]
+    },
+    "workflow_dispatch": {}
+  },
+  "permissions": {
+    "contents": "read"
+  },
+  "concurrency": {
+    "group": "patchwork-isolated-proof",
+    "cancel-in-progress": false
+  },
+  "jobs": {
+    "prove": {
+      "if": "github.repository == 'hanish-rishen/superset'",
+      "runs-on": "ubuntu-26.04",
+      "timeout-minutes": 45,
+      "steps": [
+        {
+          "name": "Checkout reviewed controller",
+          "uses": "actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "with": {
+            "path": "control",
+            "persist-credentials": false
+          }
+        },
+        {
+          "name": "Checkout pinned public source",
+          "uses": "actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803",
+          "with": {
+            "repository": "apache/superset",
+            "ref": "463c58cef1a48df974dcab710a868617b58dcb93",
+            "fetch-depth": 1,
+            "path": "source",
+            "persist-credentials": false
+          }
+        },
+        {
+          "name": "Build isolated environment and compare identical checks",
+          "env": {
+            "PYTHONUNBUFFERED": "1",
+            "PYTHONDONTWRITEBYTECODE": "1"
+          },
+          "run": "python3 control/.patchwork/remote/runner.py --recipe control/.patchwork/remote/cases/superset-title/manifest.json --expected-manifest-sha e9bcf5787981da3a3438af79aa81542af6f92125986ec17137f2486d155245aa --source \"$GITHUB_WORKSPACE/source\" --output \"$RUNNER_TEMP/patchwork-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}\""
+        }
+      ]
+    }
+  }
+}
